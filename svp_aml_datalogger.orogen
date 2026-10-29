@@ -32,3 +32,22 @@ task_context "Task", subclasses: "iodrivers_base::Task" do
 
     fd_driven
 end
+
+task_context "SVPAltitudeMultiplexerTask" do
+    needs_configuration
+
+    # The minimum depth to consider that the sensor is inside water
+    property "minimum_depth", "double", 0.0
+
+    input_port "measurements", "/svp_aml_datalogger/Measurements"
+    input_port "motor_feedback", "/base/samples/Joints"
+
+    output_port "altitude", "/base/samples/Joints"
+
+    runtime_states :UNKNOWN, :IN_WATER, :OUT_OF_WATER
+
+    # Exception state that indicates that the motor feedback joint is invalid
+    exception_states :INVALID_MOTOR_FEEDBACK
+
+    port_driven
+end
